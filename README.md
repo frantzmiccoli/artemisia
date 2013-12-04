@@ -12,6 +12,23 @@ I had some common data visualisation use cases that includes:
 
 This is what Artemisia is doing with Python 2.7.
 
+How to install it
+=================
+
+You need:
+  * scikit-learn
+  * pandas
+  * statsmodel
+  * matplotlib
+  * scipy
+  * numpy
+  * patsy
+  * husl
+  * moss
+  * seaborn
+  
+It can be boring to setup everything, that's why a Vagrantfile configuration is available.
+
 How can I use it?
 =================
 
@@ -77,7 +94,12 @@ About **matches**:
 * They support the exact same thing as filters
 * There's a special case for the match with is the `last` value which just take the last value of a file
 
+As a lib
+========
 
+Open artemisia.py and look at the method called `run()`, it's the most important one, where all the logic is.
+
+You can copy this basic structure and try to tweak things to have a more custom behavior if you need it.
 
 What's missing?
 ===============
