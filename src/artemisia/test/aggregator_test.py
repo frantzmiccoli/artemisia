@@ -1,5 +1,5 @@
 import unittest
-from lib.artemisia import artemisia as aggregator
+import artemisia.aggregator as aggregator
 
 
 class AggregatorTest(unittest.TestCase):

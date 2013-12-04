@@ -44,12 +44,10 @@ class Artemisia:
 
     def _parse_args(self):
         description = '''
-        Galimpico analysis tool is meant to parse data output
-        from Galimpico simulation tool to build graph and compute models
+        Artemisia tool is meant to parse data in CSV to build graph after some
+        basic preprocessing
         '''
         parser = argparse.ArgumentParser(description=description)
-        parser.add_argument("-l", action="store", dest="loader", default=None,
-                            help="A script path to use as loader")
         parser.add_argument("-x", action="store", dest="x",
                             help="The data field to use for the x side of "
                                  "the plot")
@@ -65,13 +63,15 @@ class Artemisia:
         parser.add_argument("-f", action="append", dest="filters", default=[],
                             help="Consider only elements that match this"
                                  " filter")
+        parser.add_argument("-l", action="store", dest="loader", default=None,
+                            help="A python package to use as loader")
         parser.add_argument("-s", action="store_true", dest="scatter",
                             default=False, help="Flag to force scatter plot")
         parser.add_argument("-i", action="store", dest="input", default='./',
                             help="The input dir to consider (mandatory)")
         parser.add_argument("-o", action="store", dest="output",
                             default="out.png",
-                            help="The output file to use (if relevant)")
+                            help="The output file to use")
 
         self._args = parser.parse_args()
 
@@ -107,8 +107,11 @@ class Artemisia:
         sys.path.append(os.getcwd())
         loader_package = self._args.loader
         imported_loader = __import__(loader_package)
-        last_package = loader_package.split('.')[-1]
-        imported_loader = getattr(imported_loader, last_package)
+        split_package = loader_package.split('.')
+        while len(split_package) != 0:
+            sub_package = split_package.pop(0)
+            if sub_package in dir(imported_loader):
+                imported_loader = getattr(imported_loader, sub_package)
         return imported_loader
 
     def _get_columns(self):

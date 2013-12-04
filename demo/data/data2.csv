@@ -1,0 +1,9 @@
+temperature,room,time,system
+14,living,1234,version-1
+23,living,1235,version-1
+20,bathroom,1321,version-1
+21,living,1237,version-2
+20,bedroom,1237,version-3
+20,living,1238,version-2
+20,bedroom,1239,version-2
+23,bathroom,1290,version-2

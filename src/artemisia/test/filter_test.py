@@ -1,6 +1,7 @@
 import unittest
-from lib.artemisia.src.artemisia.filter import FilterManager
-from lib.artemisia.src.artemisia.filter import FieldFilter
+
+import artemisia.filter.FilterManager as FilterManager
+import artemisia.filter.FieldFilter as FieldFilter
 
 
 class FilterTest(unittest.TestCase):
@@ -61,5 +62,3 @@ class FilterTest(unittest.TestCase):
     def _generator_to_list(self, generator):
         return [v for v in generator]
 
-if __name__ == '__main__':
-    unittest.main()
