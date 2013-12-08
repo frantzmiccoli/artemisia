@@ -1,5 +1,4 @@
 import sqlite3
-import os
 import re
 import types
 import numpy
@@ -154,6 +153,11 @@ class Aggregator:
 
 
 class StdDevAggregate:
+    """
+    Some libraries are available but we only need an aggregate for StdDev...
+    Do we?
+    """
+
     def __init__(self):
         self.values = []
 

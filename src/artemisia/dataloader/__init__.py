@@ -21,16 +21,33 @@ class DataLoader:
             DataLoader._casts[what] = []
         DataLoader._casts[what].append(field)
 
-
     def __init__(self):
         self._data_file_extension = "csv"
 
+    def extract_from_path(self, path):
+        """
+        Extract from the path (picking the right method to call)
+        """
+        if os.path.isdir(path):
+            for file_data in self.extract_from_dir(path):
+                yield file_data
+        else:
+            for value_point in self.extract_from_file(path):
+                yield value_point
+
+
     def extract_from_dir(self, dir_path):
+        """
+        Extract the data from a directory
+        """
         for file_path in self.list_data_files(dir_path):
             file_data = self.extract_from_file(file_path)
             yield file_data
 
     def extract_from_file(self, file_path):
+        """
+        Extract the data from a file_path
+        """
         reader = csv.reader(open(file_path))
         header = None
         for row in reader:

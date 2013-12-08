@@ -2,6 +2,10 @@ import types
 from artemisia.filter.FieldFilter import FieldFilter
 
 class FilterManager:
+    """
+    This class is used as a filter manager. You load filters in it, and gives it
+    a generator to get another generator yielding only the filtered elements.
+    """
 
     def __init__(self):
         self._file_data_filters = []

@@ -5,6 +5,7 @@ class Modifier:
     """
     A modifier is used to alter value_points contains within a generator
     """
+
     def __init__(self, func):
         self._func = func
 

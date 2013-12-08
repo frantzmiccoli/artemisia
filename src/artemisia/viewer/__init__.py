@@ -4,12 +4,18 @@ import artemisia.helper as ghelper
 
 matplotlib.use('Agg') # works better in Vagrant
 import pylab
+import seaborn
 from itertools import cycle
 import types
 import numpy
 
 
 class Viewer:
+    """
+    This class is wrapping matplotlib and is meant to provide an easy access
+    by letting the end user plotting data, by just providing a data generator
+    and the relevant element for plotting
+    """
 
     def __init__(self):
         self._helper = ghelper.Helper()

@@ -9,6 +9,7 @@ import artemisia.filter as gfilter
 import artemisia.viewer as gviewer
 from artemisia import helper as ghelper
 
+
 class Artemisia:
 
     def __init__(self):
@@ -22,7 +23,7 @@ class Artemisia:
 
     def run(self):
         loader = dataloader.DataLoader()
-        file_data_generator = loader.extract_from_dir(self._args.input)
+        file_data_generator = loader.extract_from_path(self._args.input)
 
         modifier_manager = gmodifier.ModifierManager()
         [modifier_manager.add_modifier(modifier)
