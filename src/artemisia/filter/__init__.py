@@ -1,6 +1,5 @@
 import types
-from artemisia.filter import FieldFilter
-
+from artemisia.filter.FieldFilter import FieldFilter
 
 class FilterManager:
 

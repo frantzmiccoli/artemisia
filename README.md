@@ -15,6 +15,9 @@ This is what Artemisia is doing with Python 2.7.
 How to install it
 =================
 
+Requirements
+------------
+
 You need:
   * scikit-learn
   * pandas
@@ -27,7 +30,17 @@ You need:
   * moss
   * seaborn
   
+Use Vagrant
+-----------
+
 It can be boring to setup everything, that's why a Vagrantfile configuration is available.
+
+  * Install Vagrant
+  * Go into the clone of this repo
+  * `vagrant up`
+  * `vagrant ssh` (this will connect you inside the VM)
+  * `cd /vagrant` (this will put you inside the directory of the project with everything you need already installed)
+
 
 How can I use it?
 =================
