@@ -5,7 +5,7 @@ I had some common data visualisation use cases that includes:
 
 * Loading data from CSV files (usually one file per record)
 * Removing some lines (filtering), to refine some display for example or remove extreme value
-* Select only on line (usually the last one) of my CSV files: when measuring a phenomenon, sometimes only the last stage is interesting.
+* Select only one single line (usually the last one) of my CSV files: when measuring a phenomenon, sometimes only the last stage is interesting.
 * Modify the data on the fly, to normalize some data or combine them into other fields.
 * Generate a basic scatter plot or bar chart from the data.
 
