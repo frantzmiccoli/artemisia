@@ -80,7 +80,7 @@ class Aggregator:
                 for value_point in file_data:
                     self._load_value_point(value_point)
             else:
-                raise "Unexcepted type"
+                raise Exception("Unexcepted type")
 
     def _load_value_point(self, value_point):
         columns = self._get_columns()

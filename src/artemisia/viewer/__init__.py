@@ -32,7 +32,7 @@ class Viewer:
         self._scatter = kwargs.get('scatter', False)
         if ((self._color_column is not None) & (len(axis_columns) > 3))\
             | ((self._color_column is None) & (len(axis_columns) > 2)):
-            raise "Unexpected axis count"
+            raise Exception("Unexpected axis count")
 
         xy_axis_columns = list(axis_columns[:])
         if (not self._scatter) & (self._color_column is not None):

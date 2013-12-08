@@ -121,4 +121,4 @@ class FieldFilter:
             def is_in(value):
                 return arg in value.lower()
             return is_in
-        raise "Dafuq are you sending as input to this function?"
+        raise Exception("Dafuq are you sending as input to this function?")
