@@ -10,17 +10,26 @@ class Helper:
     def __init__(self):
         self._sql_function_re = re.compile('^\s*\w*\s*\((.*)\)\s*$')
 
-    def clean_columns(self, columns):
+    def clean_columns(self, columns, remove_sql=True):
         """
         Clean column names by removing duplicates. this function takes a list
         and return a list
         """
         columns = list(set(columns))
 
-        if None in columns:
+        while None in columns:
             columns.remove(None)
 
-        return columns
+        cleaned_columns = []
+        for column in columns:
+            if remove_sql:
+                match = self._sql_function_re.match(column)
+                if match is not None:
+                    column = match.group(1)
+
+            cleaned_columns.append(column)
+
+        return cleaned_columns
 
     def is_sql_function(self, column):
         """
