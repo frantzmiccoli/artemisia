@@ -52,11 +52,11 @@ class FieldFilter:
             is_castable_to_float = False
 
         if not is_castable_to_float:
-            return match # which is False here
+            return match  # which is False here
 
         remaining_file_data = file_data[1:]
         if len(remaining_file_data) == 0:
-            return match # which is False here
+            return match  # which is False here
 
         return self._match_file_data(remaining_file_data)
 

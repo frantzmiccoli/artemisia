@@ -1,4 +1,6 @@
-__author__ = 'frantz'
+import os
+import artemisia.modifier.normalizer as gnormalizer
+
 
 def get_version_number_modifier():
     def system_number_modifier(value_point):

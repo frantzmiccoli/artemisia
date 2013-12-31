@@ -23,6 +23,7 @@ class DataLoader:
 
     def __init__(self):
         self._data_file_extension = "csv"
+        self._optimist_cast = True
 
     def extract_from_path(self, path):
         """
@@ -56,6 +57,7 @@ class DataLoader:
                 continue
             value_point = dict(zip(header, row))
             self._clean_data_value(value_point)
+            value_point['_file_path'] = file_path
             yield value_point
 
     def list_data_files(self, dir_path):
@@ -69,6 +71,16 @@ class DataLoader:
                 if field in value_point.keys():
                     casted = self._cast(wishedType, value_point[field])
                     value_point[field] = casted
+        if not self._optimist_cast:
+            return
+        for field in value_point.keys():
+            value = value_point[field]
+            if isinstance(value, types.StringType):
+                try:
+                    casted = self._cast('float', value)
+                    value_point[field] = casted
+                except ValueError:
+                    pass
 
     def _cast(self, wishedType, value):
         if wishedType == 'int':

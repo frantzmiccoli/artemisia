@@ -36,26 +36,44 @@ class FilterManager:
             return
         self._first_to_match_filters.append(FieldFilter(*args))
 
-    def filter(self, dataGenerator):
-        '''
+    def filter(self, data_generator):
+        """
         Yield filtered value
 
         The dataGenerator will be iterated, filters let filter entries that
         match the filters
-        '''
-        for file_data in dataGenerator:
+        """
+        if self._should_flatten_generator:
+            data_generator = self._flatten(data_generator)
+        for file_data in data_generator:
             if isinstance(file_data, types.GeneratorType):
                 file_data = [value_point for value_point in file_data]
             if self._data_matches_filters(file_data):
-                yield self._extract_data_point(file_data)
+                if self._should_flatten_generator():
+                    yield file_data
+                else:
+                    yield self._extract_data_point(file_data)
+
+    def _flatten(self, generator):
+        """
+        if the generator yield dictionaries, this function will yield
+        dictionary, if the generator yield arrays, this function yield
+        the arrays values.
+        """
+        for item in generator:
+            if isinstance(item, types.DictType):
+                yield item
+            else:
+                for second_level_item in item:
+                    yield second_level_item
 
     def _data_matches_filters(self, data):
-        '''
+        """
         Check if file_data matches the filters
 
         Adapt itself to either work with file_data as a dict or a list, the list
         is assume to contain a list of dict
-        '''
+        """
         if isinstance(data, types.DictionaryType):
             value_point = data
         elif isinstance(data, types.ListType):
@@ -79,3 +97,7 @@ class FilterManager:
                 if not field_filter.match(value_point):
                     continue
                 return value_point
+
+    def _should_flatten_generator(self):
+        return len(self._first_to_match_filters) == 0
+

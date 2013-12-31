@@ -114,11 +114,60 @@ Open artemisia.py and look at the method called `run()`, it's the most important
 
 You can copy this basic structure and try to tweak things to have a more custom behavior if you need it.
 
+Give me more details
+====================
+This sections mainly covers built in modifiers that can be useful.
+
+Normalizing your data
+---------------------
+If you do just want to normalize a field, just use `normalized_original_field_name`.
+
+For **more advanced usage**, you may need to perform your normalization after a presplitting of your instance.
+
+**For example**, it may not make sense to normalize of performance for different problems by mixing every single data. Then you'll need to update your loader.
+
+
+    import artemisia.registry as aregistry
+    def get_normalized_performance_modifier():
+        data_dir_path = aregistry.get_data_dir_path()
+        
+        # We normalize considering different split of our data according to fixed 
+        # fields whose value shouldn't change within a split 
+        fixed_fields = ['problem_type']
+        normalizer = gnormalizer.Normalizer(data_dir_path, 'performance',
+                                        fixed_fields=fixed_fields)
+                                        
+        # Bonus point we only take the last point of each file because
+        # it makes sense for our given problem 
+        normalizer.filter_manager.add_first_to_match_filter('last')
+
+        def normalized_performance_modifier(value_point):
+            value_point = normalizer.normalize(value_point)
+            return value_point
+
+        return normalized_performance_modifier
+
+
+Clusters pseudofields
+---------------------
+
+Clusters pseudofield can be computed and used on the fly.
+
+**For example** if your data are containing temperature and humidity in many rooms, you may would like to run artemisia only for a subset of `rooms`, let's say two thirds of them. You then just have to add a filter like:
+
+    -f "cluster_room_3 in 0 1"
+    
+**With more details**, this will compute a hash as an int from each `room` and fill a `cluster_room_3` with the modulo 3 of this int (which should randomly sample the rooms). Then the filter just simply extract the line for which the value is either 0 or 1.
+
+If don't want to sample accross a given field but just over the lines: you can also use things like `cluster_3`.
+
+
 What's missing?
 ===============
 
-1. Artemisia is not clean, some refactoring my be required, especially in the view component
-2. There's no standardized way to normalize data or at least to factorize code around that given need… Those are missing.
+* Artemisia is not clean, some refactoring my be required, especially in the view component
+* Artemisia let users do a great deal of preprocessing before display, it would be a neat feature to also let users export their data to some exchange format (CSV, ARFF)
+
 
 License
 =======
