@@ -43,7 +43,7 @@ class FilterManager:
         The dataGenerator will be iterated, filters let filter entries that
         match the filters
         """
-        if self._should_flatten_generator:
+        if self._should_flatten_generator():
             data_generator = self._flatten(data_generator)
         for file_data in data_generator:
             if isinstance(file_data, types.GeneratorType):
