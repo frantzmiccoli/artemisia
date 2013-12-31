@@ -9,29 +9,25 @@ import artemisia.modifier as gmodifier
 import artemisia.filter as gfilter
 import artemisia.viewer as gviewer
 from artemisia import helper as ghelper
-import artemisia.modifier.cluster as cluster_modifier
-import artemisia.modifier.normalizer as normalizer_modifier
 import artemisia.registry as registry
 
 class Artemisia:
 
     def __init__(self):
-        self._filter_re = re.compile('^\s*\(((?:,?(?:[^,]+))+)\)\s*$')
-        self._modifier_modules = [cluster_modifier, normalizer_modifier]
+        pass
 
     def configure(self):
         self._parse_args()
         self._value_point_filters = self._get_value_points_filters()
         self._first_to_match_filters = self._get_first_to_match_filters()
-        self._modifiers = self._get_modifiers()
 
     def run(self):
         loader = dataloader.DataLoader()
         file_data_generator = loader.extract_from_path(self.get_data_dir_path())
 
         modifier_manager = gmodifier.ModifierManager()
-        [modifier_manager.add_modifier(modifier)
-            for modifier in self._modifiers]
+        modifier_manager.add_lookup_module(self._args.loader)
+        modifier_manager.load_modifiers_from_columns(self._get_columns())
         modified_generator = modifier_manager.run(file_data_generator)
 
         filter_manager = gfilter.FilterManager()
@@ -95,87 +91,6 @@ class Artemisia:
                    for filter_string in filters_arg]
         return filters
 
-    def _get_modifiers(self):
-        if self._args.loader is not None:
-            if self._args.loader not in self._modifier_modules:
-                self._modifier_modules.append(self._args.loader)
-
-        modifiers_map = {}
-
-        for modifier_module in self._modifier_modules:
-            modifiers_map.update(
-                self._get_modifiers_map_from_module(modifier_module))
-
-        return self._get_ordered_modifiers(modifiers_map)
-
-    def _get_ordered_modifiers(self, modifiers_map):
-        """
-        Return the modifier ordered in a such way that their computation won't
-        enter in any dependency problem.
-        """
-        modified_columns = modifiers_map.keys()
-        modified_columns_sorted = []
-        while len(modified_columns) != 0:
-            parent_columns = self._get_parent_columns(modified_columns)
-            modified_columns = list(set(modified_columns) - set(parent_columns))
-            modified_columns_sorted += parent_columns
-        modifiers = [modifiers_map[column] for column in modified_columns_sorted]
-        return modifiers
-
-    def _get_parent_columns(self, columns):
-        """
-        Get parent columns from a list of columns. A column is a parent one
-        if it's not contained in any other one. Among 'cluster_zone_4', 'zone'
-        and 'temperature', the parent columns are 'zone' and 'temperature',
-        implicitly we assume that 'cluster_zone_4' need 'zone' to be computed.
-        """
-        parent_columns = []
-        for column in columns:
-            found_parent = False
-            for parent_candidate_column in columns:
-                if column == parent_candidate_column:
-                    continue
-                if parent_candidate_column in column:
-                    found_parent = True
-                    break
-            if not found_parent:
-                parent_columns.append(column)
-        return parent_columns
-
-    def _get_modifiers_map_from_module(self, module):
-        if isinstance(module, types.StringType):
-            module = self._get_loader_module(module)
-        if module is None:
-            return []
-        columns = self._get_columns()
-        modifiers_map = {}
-        loader_functions = dir(module)
-        for column in columns:  # for each column
-            get_modifier_name = 'get_' + column + '_modifier'
-            if get_modifier_name in loader_functions:
-                modifier_generator = getattr(module, get_modifier_name)
-                modifiers_map[column] = modifier_generator()
-            if not hasattr(module, 'modifiers_map'):
-                continue
-            module_modifiers_map = getattr(module, 'modifiers_map')
-            for (loader_function_pattern, get_modifier)\
-                    in module_modifiers_map.iteritems():
-                match = loader_function_pattern.match(column)
-                if match is not None:
-                    modifiers_map[column] = get_modifier(column)
-        return modifiers_map
-
-    def _get_loader_module(self, module_name):
-        sys.path.append(os.getcwd())
-        loader_package = module_name
-        imported_loader = __import__(loader_package)
-        split_package = loader_package.split('.')
-        while len(split_package) != 0:
-            sub_package = split_package.pop(0)
-            if sub_package in dir(imported_loader):
-                imported_loader = getattr(imported_loader, sub_package)
-        return imported_loader
-
     def _get_columns(self):
         columns = [single_filter[0]
                    for single_filter in self._value_point_filters]
@@ -188,15 +103,6 @@ class Artemisia:
             columns.append(self._args.color)
         return ghelper.Helper().clean_columns(columns)
 
-    def _parse_filter(self, filter_string):
-        filter_string = filter_string.strip()
-        match = self._filter_re.match(filter_string)
-        if match is None:
-            filter_elements = filter_string.split(' ')
-            return filter_elements
-        stripped = match.group(0)[1:-1]
-        filter_elements = stripped.split(',')
-        return filter_elements
 
 
 registry.instance = None

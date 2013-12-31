@@ -123,6 +123,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   apt-get install -qy build-essential python-dev python-numpy python-setuptools python-scipy libatlas-dev libatlas3-base python-matplotlib python-pip git-core
   export PATH="/usr/local/bin:$PATH"
   easy_install -U scikit-learn
+  easy_install arff
   pip install pandas
   pip install statsmodels
   pip install patsy

@@ -1,4 +1,5 @@
 import types
+import re
 from artemisia.filter.FieldFilter import FieldFilter
 
 class FilterManager:
@@ -11,29 +12,35 @@ class FilterManager:
         self._file_data_filters = []
         self._first_to_match_filters = []
 
+        self._filter_re = re.compile('^\s*\(((?:,?(?:[^,]+))+)\)\s*$')
+
     def add_file_data_filter(self, *args):
-        '''
+        """
         Add a filter that will be use to filter the data
 
           * field,                string, that should be filtered
           * filter_func, function|string, the function to apply
           * filter_func_extra_arg
           * ...
-        '''
+        """
+        if isinstance(args[0], types.StringType) & (len(args) == 1):
+            args = self._parse_filter(args)
         self._file_data_filters.append(FieldFilter(*args))
 
     def add_first_to_match_filter(self, *args):
-        '''
+        """
         Add a filter that will be use to pick a value point of the data
 
           * field,                string, that should be filtered
           * filter_func, function|string, the function to apply
           * filter_func_extra_arg
           * ...
-        '''
+        """
         if args[0] == "last":
             self._first_to_match_filters.append(args[0])
             return
+        if isinstance(args[0], types.StringType) & (len(args) == 1):
+            args = self._parse_filter(args)
         self._first_to_match_filters.append(FieldFilter(*args))
 
     def filter(self, data_generator):
@@ -101,3 +108,12 @@ class FilterManager:
     def _should_flatten_generator(self):
         return len(self._first_to_match_filters) == 0
 
+    def _parse_filter(self, filter_string):
+        filter_string = filter_string.strip()
+        match = self._filter_re.match(filter_string)
+        if match is None:
+            filter_elements = filter_string.split(' ')
+            return filter_elements
+        stripped = match.group(0)[1:-1]
+        filter_elements = stripped.split(',')
+        return filter_elements
