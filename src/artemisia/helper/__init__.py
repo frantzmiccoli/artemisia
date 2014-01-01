@@ -1,4 +1,5 @@
 import re
+import types
 
 
 class Helper:
@@ -15,8 +16,6 @@ class Helper:
         Clean column names by removing duplicates. this function takes a list
         and return a list
         """
-        columns = list(set(columns))
-
         while None in columns:
             columns.remove(None)
 
@@ -29,6 +28,8 @@ class Helper:
 
             cleaned_columns.append(column)
 
+        cleaned_columns = list(set(cleaned_columns))
+
         return cleaned_columns
 
     def is_sql_function(self, column):
@@ -39,3 +40,16 @@ class Helper:
         """
         match = self._sql_function_re.match(column)
         return match is not None
+
+    def flatten(self, generator):
+        """
+        if the generator yield dictionaries, this function will yield
+        dictionary, if the generator yield arrays, this function yield
+        the arrays values.
+        """
+        for item in generator:
+            if isinstance(item, types.DictType):
+                yield item
+            else:
+                for second_level_item in item:
+                    yield second_level_item

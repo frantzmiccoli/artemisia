@@ -1,6 +1,7 @@
 import types
 import re
 from artemisia.filter.FieldFilter import FieldFilter
+import artemisia.helper as ahelper
 
 class FilterManager:
     """
@@ -61,18 +62,22 @@ class FilterManager:
                 else:
                     yield self._extract_data_point(file_data)
 
+    def get_target_fields(self):
+        fields = []
+        for single_filter in \
+                (self._first_to_match_filters + self._file_data_filters):
+            fields.append(single_filter.get_target_field)
+        return fields
+
     def _flatten(self, generator):
         """
         if the generator yield dictionaries, this function will yield
         dictionary, if the generator yield arrays, this function yield
         the arrays values.
         """
-        for item in generator:
-            if isinstance(item, types.DictType):
-                yield item
-            else:
-                for second_level_item in item:
-                    yield second_level_item
+        helper = ahelper.Helper()
+        for v in helper.flatten(generator):
+            yield v
 
     def _data_matches_filters(self, data):
         """

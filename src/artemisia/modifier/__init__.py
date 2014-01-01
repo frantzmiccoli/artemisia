@@ -69,7 +69,7 @@ class ModifierManager:
 
     def _get_modifiers_map_from_module(self, columns, module):
         """
-        The modifier map 
+        The modifier map
         """
         modifiers_map = {}
         loader_functions = dir(module)
