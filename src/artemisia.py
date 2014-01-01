@@ -27,6 +27,7 @@ class Artemisia:
                 export_type)
             exporter.set_columns(self._args.columns)
             exporter.set_output_file_path(self._args.output)
+            exporter.set_relation_name(self._args.relation)
             exporter.export(preprocessed_data_processor)
         elif self._args.subparser_name == 'plot':
             v = gviewer.Viewer()
@@ -83,11 +84,20 @@ class Artemisia:
         self._add_generic_arguments(export_subparser)
         export_subparser.add_argument("-c", action="append", dest="columns",
                                       default=None,
+                                      help="The data columns to export "
+                                           "if left empty, we will export "
+                                           "all columns")
+        export_subparser.add_argument("-c", action="append", dest="columns",
+                                      default=None,
                                       help="The data columns to export")
         export_subparser.add_argument("-t", action="store", dest="type",
                                       default='csv',
                                       help="The type to which export "
                                            "(csv / arff)")
+        export_subparser.add_argument("-r", action="store", dest="relation",
+                                      default='artemisia_export',
+                                      help="The relation name described by "
+                                           "the data")
         export_subparser.add_argument("-o", action="store", dest="output",
                                       default='export.arff',
                                       help="The file to which exports")
