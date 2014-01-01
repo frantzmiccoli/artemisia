@@ -124,9 +124,9 @@ class Artemisia:
         if self._filter_manager is not None:
             return self._filter_manager
         filter_manager = gfilter.FilterManager()
-        [filter_manager.add_file_data_filter(*single_filter)
+        [filter_manager.add_file_data_filter(single_filter)
          for single_filter in self._args.filters]
-        [filter_manager.add_first_to_match_filter(*single_filter)
+        [filter_manager.add_first_to_match_filter(single_filter)
          for single_filter in self._args.matches]
         self._filter_manager = filter_manager
         return filter_manager

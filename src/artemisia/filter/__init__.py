@@ -25,7 +25,7 @@ class FilterManager:
           * ...
         """
         if isinstance(args[0], types.StringType) & (len(args) == 1):
-            args = self._parse_filter(args)
+            args = self._parse_filter(args[0])
         self._file_data_filters.append(FieldFilter(*args))
 
     def add_first_to_match_filter(self, *args):
@@ -41,7 +41,7 @@ class FilterManager:
             self._first_to_match_filters.append(args[0])
             return
         if isinstance(args[0], types.StringType) & (len(args) == 1):
-            args = self._parse_filter(args)
+            args = self._parse_filter(args[0])
         self._first_to_match_filters.append(FieldFilter(*args))
 
     def filter(self, data_generator):
@@ -65,8 +65,9 @@ class FilterManager:
     def get_target_fields(self):
         fields = []
         for single_filter in \
-                (self._first_to_match_filters + self._file_data_filters):
-            fields.append(single_filter.get_target_field)
+            (self._first_to_match_filters + self._file_data_filters):
+            if isinstance(single_filter, FieldFilter):
+                fields.append(single_filter.get_target_field())
         return fields
 
     def _flatten(self, generator):

@@ -129,7 +129,7 @@ For **more advanced usage**, you may need to perform your normalization after a 
 
     import artemisia.registry as aregistry
     def get_normalized_performance_modifier():
-        data_dir_path = aregistry.get_data_dir_path()
+        data_dir_path = aregistry.instance.get_data_dir_path()
         
         # We normalize considering different split of our data according to fixed 
         # fields whose value shouldn't change within a split 

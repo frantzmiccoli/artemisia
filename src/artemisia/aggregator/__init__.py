@@ -86,11 +86,16 @@ class Aggregator:
         columns = self._get_columns()
         # A crash in the line below may mean that one of the column doesn't
         # exist in the value point
-        values = ['\'' + str(value_point[column]) + '\'' for column in columns]
-        insert_statement = 'INSERT INTO ' + self._table_name + ' (id, '\
-                           + ', '.join(columns)\
-                           + ') VALUES (null, ' + ', '.join(values) + ')'
-        self._connection.execute(insert_statement)
+        try:
+            values = ['\'' + str(value_point[column]) + '\'' for column in columns]
+            insert_statement = 'INSERT INTO ' + self._table_name + ' (id, ' \
+                               + ', '.join(columns) \
+                               + ') VALUES (null, ' + ', '.join(values) + ')'
+            self._connection.execute(insert_statement)
+        except KeyError as e:
+            message = 'A value point has been ignored since not field ' \
+                      + str(e) + ' can be found' + "\n"
+            # @todo do something with message if needed ...
 
     def _query_aggregate(self):
         columns = self._aggregate_columns[:]
