@@ -72,6 +72,7 @@ class Normalizer:
             files_hash = self._get_data_hash()
             data = self._compute_normalization_data(filtered_data, files_hash)
         self._normalization_data = data
+        self._persist_normalization_data()
         return data
 
     def _compute_normalization_data(self, filtered_data, files_hash):
@@ -112,7 +113,7 @@ class Normalizer:
             self._normalization_data[value_point_key][relevant_value] =\
                 aggregate
 
-    def _persist_normalization_date(self):
+    def _persist_normalization_data(self):
         if os.path.exists(self._get_normalization_data_path()):
             os.remove(self._get_normalization_data_path())
         pickle.dump(self._normalization_data,
