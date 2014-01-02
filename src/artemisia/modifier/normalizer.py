@@ -33,8 +33,8 @@ class Normalizer:
             raise Exception("Unknown problem type")
         problem_normalization_data = normalization_data[value_point_key]
         # With heterogeneous data the field may not be available
-        if self._field_to_normalize in value_point.keys():
-            return
+        if self._field_to_normalize not in value_point.keys():
+            return value_point
         normalized_value = value_point[self._field_to_normalize]
 
         avg_key = 'AVG(' + self._field_to_normalize + ')'

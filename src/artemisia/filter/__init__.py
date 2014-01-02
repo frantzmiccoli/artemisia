@@ -53,7 +53,9 @@ class FilterManager:
         match the filters
         """
         if self._should_flatten_generator():
+            print "flattening"
             data_generator = self._flatten(data_generator)
+        print "flat or not flat"
         for file_data in data_generator:
             if isinstance(file_data, types.GeneratorType):
                 file_data = [value_point for value_point in file_data]
