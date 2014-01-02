@@ -3,6 +3,7 @@ import re
 from artemisia.filter.FieldFilter import FieldFilter
 import artemisia.helper as ahelper
 
+
 class FilterManager:
     """
     This class is used as a filter manager. You load filters in it, and gives it
@@ -60,7 +61,10 @@ class FilterManager:
                 if self._should_flatten_generator():
                     yield file_data
                 else:
-                    yield self._extract_data_point(file_data)
+                    value_point = self._extract_data_point(file_data)
+                    if value_point is None:
+                        continue
+                    yield value_point
 
     def get_target_fields(self):
         fields = []
@@ -106,6 +110,8 @@ class FilterManager:
         for value_point in file_data:
             for field_filter in self._first_to_match_filters:
                 if field_filter == "last":
+                    if len(file_data) == 0:
+                        return
                     return file_data[-1]
                 if not field_filter.match(value_point):
                     continue
