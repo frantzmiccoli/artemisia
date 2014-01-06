@@ -49,12 +49,12 @@ class ArffExporter(Exporter):
         for (key, value) in value_point.items():
             if key not in self._arff_fetched_values.keys():
                 self._arff_fetched_values[key] = []
-            if value in self._arff_fetched_values[key]:
-                continue
-            self._arff_fetched_values[key].append(value)
             if len(self._arff_fetched_values[key]) \
                     < self._arff_max_fetched_values:
                 done = False
+            if value in self._arff_fetched_values[key]:
+                continue
+            self._arff_fetched_values[key].append(value)
         return done
 
     def _compute_types(self):
