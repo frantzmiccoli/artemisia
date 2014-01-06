@@ -6,7 +6,7 @@ import artemisia.filter as gfilter
 import artemisia.viewer as gviewer
 from artemisia import helper as ghelper
 import artemisia.registry as registry
-import artemisia.exporter as aexporter
+import artemisia.exporter
 
 class Artemisia:
 
@@ -23,8 +23,8 @@ class Artemisia:
 
         if self._args.subparser_name == 'export':
             export_type = self._args.type
-            exporter = aexporter.ExporterFactory().get_exporter_factory(
-                export_type)
+            exporter = artemisia.exporter.ExporterFactory()\
+                .get_exporter_factory(export_type)
             exporter.set_columns(self._args.columns)
             exporter.set_output_file_path(self._args.output)
             exporter.set_relation_name(self._args.relation)
