@@ -4,7 +4,11 @@ import artemisia.helper as ghelper
 
 matplotlib.use('Agg') # works better in Vagrant
 import pylab
-import seaborn
+try:
+    import seaborn
+except ImportError:
+    print 'seaborn is not available, the final result could be more pretty'
+
 from itertools import cycle
 import types
 import numpy
@@ -44,6 +48,9 @@ class Viewer:
         plot_ready_values = self._get_plot_ready_values(aggregate, xy_axis_columns)
 
         self._plot(plot_ready_values, xy_axis_columns)
+
+        #avoid big margins (should be sent as an argument
+        pylab.tight_layout()
 
         pylab.savefig(self._output_file_name)
 

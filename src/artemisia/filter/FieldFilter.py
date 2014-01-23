@@ -13,7 +13,11 @@ class FieldFilter:
     def __init__(self, *args):
         args = list(args)
         self._target_field = args.pop(0)
-        self._filter_func = self._filter_func_from_arg(args.pop(0))
+        filter_arg = args.pop(0)
+        if (filter_arg.strip() == "not") & (args[0].strip() == "in"):
+            filter_arg = "not in"
+            args.pop(0)
+        self._filter_func = self._filter_func_from_arg(filter_arg)
         self._extra_args = args
 
     def match(self, file_data):
@@ -95,7 +99,7 @@ class FieldFilter:
                 value = args.pop(0)
                 return value in args
             return filter_func
-        if arg in ['=', '<', '<=', '>', '>=']:
+        if arg in ['!=', '=', '<', '<=', '>', '>=']:
             def filter_func(value, comparison_value):
                 try:
                     value = float(value)
@@ -106,6 +110,8 @@ class FieldFilter:
                     comparison_value = str(comparison_value).lower()
                 if arg == '=':
                     return value == comparison_value
+                if arg == '!=':
+                    return value != comparison_value
                 if arg == '<':
                     return value < comparison_value
                 if arg == '<=':

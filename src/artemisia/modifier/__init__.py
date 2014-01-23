@@ -5,6 +5,7 @@ import os
 import cluster as cluster_modifier
 import normalizer as normalizer_modifier
 
+
 class Modifier:
     """
     A modifier is used to alter value_points contains within a generator
