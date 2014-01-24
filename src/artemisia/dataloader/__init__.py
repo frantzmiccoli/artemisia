@@ -57,6 +57,8 @@ class DataLoader:
                 continue
             value_point = dict(zip(header, row))
             self._clean_data_value(value_point)
+            if len(value_point.viewkeys()) == 0:
+                continue
             value_point['_file_path'] = file_path
             yield value_point
 
