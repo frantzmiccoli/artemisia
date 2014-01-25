@@ -1,11 +1,11 @@
+from StringIO import StringIO
 import artemisia.helper as ahelper
-
-
 
 class Exporter:
     def __init__(self):
         self._columns = None
-        self._file_path = 'export.arff'
+        self._file_path = None
+        self._file_handle = None
         self._relation_name = 'artemisia_export'
 
     def _export(self, file_data_generator):
@@ -23,6 +23,27 @@ class Exporter:
 
     def set_relation_name(self, relation_name):
         self._relation_name = relation_name
+
+    def set_file_handle(self, file_handle):
+        self._file_handle = file_handle
+
+    def get_file_handle(self):
+        if self._file_handle is None:
+            if self._file_path is not None:
+                self._file_handle = open(self._file_path, 'w')
+            else:
+                self._file_handle = StringIO()
+        return self._file_handle
+
+    def get_output(self):
+        """
+        Return the content written by the exporter
+        """
+        if self._file_handle is None:
+            return None
+        self._file_handle.seek(0)
+        return self._file_handle.read()
+
 
     def _prepare_generator(self, file_data_generator):
         helper = ahelper.Helper()

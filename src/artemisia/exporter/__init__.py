@@ -12,9 +12,3 @@ class ExporterFactory:
         else:
             raise Exception('Unexpected type ' + export_type)
         return exporter
-
-
-
-
-
-

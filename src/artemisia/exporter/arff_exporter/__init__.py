@@ -16,7 +16,7 @@ class ArffExporter(Exporter):
         (generator1, generator2) = itertools.tee(file_data_generator, 2)
         self._guess_types(generator1)
 
-        f = open(self._file_path, 'w')
+        f = self.get_file_handle()
         f.write(self._get_arff_header())
 
         first = True

@@ -1,6 +1,7 @@
 import types
 import sys
 import os
+from numpy.distutils.system_info import BlasNotFoundError
 
 import cluster as cluster_modifier
 import normalizer as normalizer_modifier
@@ -15,20 +16,30 @@ class Modifier:
         self._func = func
 
     def run(self, data_generator):
+        found_at_least_one = False
         for value_point in data_generator:
-            if isinstance(value_point, types.GeneratorType):
-                value_point = [d for d in value_point]
-            if isinstance(value_point, types.ListType):
-                modified_value_point = []
-                for value_point_dict in value_point:
-                    modified_value_point_dict = self._func(value_point_dict)
-                    if modified_value_point_dict is not None:
-                        modified_value_point.append(modified_value_point_dict)
+            modified_value_point = self._run_for_value_point(value_point)
+            if modified_value_point is not None:
                 yield modified_value_point
-            else:
-                modified_value_point = self._func(value_point)
-                if modified_value_point is not None:
-                    yield modified_value_point
+                found_at_least_one = True
+        if not found_at_least_one:
+            raise Exception('Modifier build on ' + self._func.__name__ + '() '
+                            'did\'t returned anything')
+
+    def _run_for_value_point(self, value_point):
+        if isinstance(value_point, types.GeneratorType):
+            value_point = [d for d in value_point]
+        if isinstance(value_point, types.ListType):
+            modified_value_point = []
+            for value_point_dict in value_point:
+                modified_value_point_dict = self._func(value_point_dict)
+                if modified_value_point_dict is not None:
+                    modified_value_point.append(modified_value_point_dict)
+            return modified_value_point
+        else:
+            modified_value_point = self._func(value_point)
+            if modified_value_point is not None:
+                return modified_value_point
 
 
 class ModifierManager:
@@ -83,7 +94,7 @@ class ModifierManager:
                 continue
             module_modifiers_map = getattr(module, 'modifiers_map')
             for (loader_function_pattern, get_modifier) \
-                in module_modifiers_map.iteritems():
+                    in module_modifiers_map.iteritems():
                 match = loader_function_pattern.match(column)
                 if match is not None:
                     modifiers_map[column] = get_modifier(column)

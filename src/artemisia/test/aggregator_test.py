@@ -56,3 +56,7 @@ class AggregatorTest(unittest.TestCase):
             {'seller': 'apple', 'category': 'it', 'color': 'red',
              'price': 0.79}]
         ]
+
+
+if __name__ == '__main__':
+    unittest.main()

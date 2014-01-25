@@ -2,7 +2,7 @@ import matplotlib
 import artemisia.aggregator as gaggregator
 import artemisia.helper as ghelper
 
-matplotlib.use('Agg') # works better in Vagrant
+matplotlib.use('Agg')  # works better in Vagrant
 import pylab
 try:
     import seaborn

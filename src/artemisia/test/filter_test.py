@@ -1,7 +1,7 @@
 import unittest
 
-import artemisia.filter.FilterManager as FilterManager
-import artemisia.filter.FieldFilter as FieldFilter
+from artemisia.filter import FilterManager
+from artemisia.filter.FieldFilter import FieldFilter
 
 
 class FilterTest(unittest.TestCase):
@@ -35,14 +35,14 @@ class FilterTest(unittest.TestCase):
         filter_manager.add_file_data_filter('width', '>', 100)
 
         filtered = self._generator_to_list(filter_manager.filter([file_data]))
-        self.assertEqual(filtered, [file_data])
+        self.assertEqual(filtered, file_data)
 
         filter_manager.add_first_to_match_filter('iteration', '>=', 250)
 
         filtered = self._generator_to_list(filter_manager.filter([file_data]))
         self.assertEqual(filtered, [file_data[-1]])
 
-        filter_manager.add_file_data_filter('width', '>', 200)
+        filter_manager.add_file_data_filter('width > 200')
 
         filtered = self._generator_to_list(filter_manager.filter([file_data]))
         self.assertEqual(filtered, [])
@@ -58,7 +58,9 @@ class FilterTest(unittest.TestCase):
                       'weight': 11}]
         return file_data
 
-
     def _generator_to_list(self, generator):
         return [v for v in generator]
 
+
+if __name__ == '__main__':
+    unittest.main()
