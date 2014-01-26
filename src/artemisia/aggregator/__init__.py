@@ -54,7 +54,6 @@ class Aggregator:
         return self._generator_to_matrix(aggregate_generator,
                                          self._aggregate_columns)
 
-
     def _init_database(self):
         self._connection = sqlite3.connect(':memory:')
         self._connection.create_aggregate("STDDEV", 1, StdDevAggregate)
