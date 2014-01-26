@@ -121,7 +121,7 @@ class Viewer:
                         else:
                             label = None
                         self._get_matplotlib_wrapper()\
-                            .bar(index, y[index],bar_width, color=color,
+                            .bar(index, y[index], bar_width, color=color,
                                  label=label)
                         self._get_matplotlib_wrapper()\
                             .xticks(numpy.arange(len(x)) + (bar_width / 2), x)
