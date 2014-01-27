@@ -120,12 +120,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   sudo su -
   apt-get update -q
   apt-get upgrade -qy
-  apt-get install -qy build-essential python-dev python-numpy python-setuptools python-scipy libatlas-dev libatlas3-base python-matplotlib python-pip git-core
+  apt-get install -qy build-essential python-dev python-numpy python-setuptools python-scipy libatlas-dev libatlas3-base python-matplotlib python-pip git-core python-statsmodels
   export PATH="/usr/local/bin:$PATH"
+  cd /vagrant/src
+  pip install -r requirements.txt # This fails on ubuntu 13.04
   easy_install -U scikit-learn
   easy_install arff
   pip install pandas
-  pip install statsmodels
+  #pip install statsmodels
   pip install patsy
   pip install husl
   pip install moss

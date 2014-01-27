@@ -1,0 +1,10 @@
+scikit-learn
+pandas
+statsmodel
+matplotlib
+scipy
+numpy
+patsy
+husl
+moss
+seaborn
